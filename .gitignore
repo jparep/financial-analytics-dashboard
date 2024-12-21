@@ -12,9 +12,7 @@ venv/
 *.debug
 
 # Data
-data/
-*.csv
-*.xlsx
+
 
 # IDE Configurations
 .vscode/
