@@ -1,17 +1,23 @@
 # Use an official Python runtime as a base image
 FROM python:3.11-slim
 
+# Set environment variables for production
+ENV PYTHONDONTWRITEBYTECODE 1  # Prevent .pyc files
+ENV PYTHONUNBUFFERED 1        # Ensure logs are output directly
+
 # Set the working directory in the container
 WORKDIR /app
 
-# Copy the current directory contents into the container
-COPY . /app
+# Install dependencies in a single layer for smaller image size
+COPY requirements.txt ./
+RUN pip install --no-cache-dir --upgrade pip \
+    && pip install --no-cache-dir -r requirements.txt
 
-# Install dependencies
-RUN pip install --no-cache-dir -r requirements.txt
+# Copy the rest of the application code
+COPY . .
 
-# Expose port 8050
+# Expose the Dash default port
 EXPOSE 8050
 
-# Command to run the application
+# Specify the command to run the application
 CMD ["python", "app.py"]
