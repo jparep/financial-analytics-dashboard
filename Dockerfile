@@ -1,23 +1,39 @@
-# Use an official Python runtime as a base image
-FROM python:3.11-slim
+# Multi-stage Dockerfile for a professional Dash app deployment
 
-# Set environment variables for production
-ENV PYTHONDONTWRITEBYTECODE 1  # Prevent .pyc files
-ENV PYTHONUNBUFFERED 1        # Ensure logs are output directly
+# Stage 1: Dependency installation and build
+FROM python:3.11 AS builder
 
-# Set the working directory in the container
+# Set environment variables for clean Python builds
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+
+# Set working directory
 WORKDIR /app
 
-# Install dependencies in a single layer for smaller image size
+# Copy only requirements to install dependencies
 COPY requirements.txt ./
 RUN pip install --no-cache-dir --upgrade pip \
     && pip install --no-cache-dir -r requirements.txt
 
-# Copy the rest of the application code
+# Stage 2: Lightweight runtime image
+FROM python:3.11-slim
+
+# Set environment variables
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+
+# Set working directory
+WORKDIR /app
+
+# Copy dependencies from the builder stage
+COPY --from=builder /usr/local/lib/python3.11/site-packages /usr/local/lib/python3.11/site-packages
+COPY --from=builder /usr/local/bin /usr/local/bin
+
+# Copy application files
 COPY . .
 
-# Expose the Dash default port
+# Expose the Dash app port
 EXPOSE 8050
 
-# Specify the command to run the application
-CMD ["python", "app.py"]
+# Run the application with Gunicorn for better performance
+CMD ["gunicorn", "-w", "4", "-b", "0.0.0.0:8050", "app:server"]
