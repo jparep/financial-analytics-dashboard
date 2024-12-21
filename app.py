@@ -4,8 +4,8 @@ from dash.dependencies import Input, Output
 import pandas as pd
 import plotly.express as px
 
-# Load synthetic dataset
-data_url = "synthetic_banking_data.csv"
+# Load dataset
+data_url = "banking_data.csv"
 df = pd.read_csv(data_url)
 
 # Initialize Dash app
