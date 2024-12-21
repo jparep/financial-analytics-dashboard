@@ -3,7 +3,7 @@ import pandas as pd
 
 def create_layout():
     # Load a sample of the dataset to populate dropdown options
-    df = pd.read_csv("synthetic_banking_data.csv")
+    df = pd.read_csv("./data/banking_data.csv")
 
     return html.Div([
         html.H1("Banking Data Dashboard", style={"text-align": "center"}),
