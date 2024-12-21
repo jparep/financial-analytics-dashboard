@@ -1,16 +1,17 @@
-from dash import Dash, html, dcc
+from dash import Dash
+from layout import create_layout
 from callbacks import register_callbacks
 
+# Initialize the Dash app
 app = Dash(__name__)
+app.title = "Banking Data Dashboard"
 
-# App layout
-app.layout = html.Div([
-    html.H1("Banking Data Dashboard", style={'text-align': 'center'}),
-    # Add layout components here
-])
+# Set up the layout
+app.layout = create_layout()
 
 # Register callbacks
 register_callbacks(app)
 
-if __name__ == '__main__':
-    app.run_server(debug=False)
+# Run the app
+if __name__ == "__main__":
+    app.run_server(debug=False, host="0.0.0.0", port=8050)
