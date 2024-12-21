@@ -1,0 +1,31 @@
+blinker==1.9.0
+certifi==2024.12.14
+charset-normalizer==3.4.0
+click==8.1.8
+dash==2.18.2
+dash-core-components==2.0.0
+dash-html-components==2.0.0
+dash-table==5.0.0
+Flask==3.0.3
+gunicorn==23.0.0
+idna==3.10
+importlib_metadata==8.5.0
+itsdangerous==2.2.0
+Jinja2==3.1.5
+MarkupSafe==3.0.2
+nest-asyncio==1.6.0
+numpy @ file:///home/conda/feedstock_root/build_artifacts/numpy_1733688208563/work/dist/numpy-2.2.0-cp311-cp311-linux_x86_64.whl#sha256=566542b8a000534b4c33bb228b048a00de58e0ae982389b20ea8b51d1877fa84
+packaging==24.2
+pandas @ file:///home/conda/feedstock_root/build_artifacts/pandas_1726878443020/work
+plotly==5.24.1
+python-dateutil @ file:///home/conda/feedstock_root/build_artifacts/python-dateutil_1733215673016/work
+pytz @ file:///home/conda/feedstock_root/build_artifacts/pytz_1706886791323/work
+requests==2.32.3
+retrying==1.3.4
+six @ file:///home/conda/feedstock_root/build_artifacts/six_1733380938961/work
+tenacity==9.0.0
+typing_extensions==4.12.2
+tzdata @ file:///home/conda/feedstock_root/build_artifacts/python-tzdata_1733235305708/work
+urllib3==2.2.3
+Werkzeug==3.0.6
+zipp==3.21.0
