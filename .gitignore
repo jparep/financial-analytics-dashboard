@@ -1,0 +1,45 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual Environment
+venv/
+.env
+
+# Logs and Debugging
+*.log
+*.debug
+
+# Data
+data/
+*.csv
+*.xlsx
+
+# IDE Configurations
+.vscode/
+.idea/
+
+# System Files
+.DS_Store
+Thumbs.db
+
+# Deployment
+*.env
+*.lock
+
+# Python bytecode
+*.py[cod]
+
+# Cache
+.cache/
+
+# Distribution files
+dist/
+build/
+*.egg-info/
+
+# Temporary files
+*.tmp
+*.bak
+~*
