@@ -21,7 +21,6 @@ This repository hosts an **interactive dashboard** built with Python and Dash to
 - **Dash**: Framework for building interactive web applications.
 - **Plotly**: Library for creating rich visualizations.
 - **Pandas**: Data manipulation and analysis.
-- **Faker**: Synthetic data generation.
 
 ---
 
@@ -42,16 +41,14 @@ The dataset contains 95,000 synthetic records of banking information, including:
 - `Transaction_Amount`: Amount of each transaction.
 - `Date`: Transaction date.
 
-The dataset is generated using the [Faker library](https://faker.readthedocs.io/).
-
 ---
 
 ## Installation
 
 1. **Clone the Repository**:
    ```bash
-   git clone https://github.com/your-username/interactive-banking-dashboard.git
-   cd interactive-banking-dashboard
+   git clone https://github.com/your-username/financial-analytics-dashboard.git
+   cd financial-analytics-dashboard
    ```
 
 2. **Create a Virtual Environment**:
@@ -79,7 +76,7 @@ The dataset is generated using the [Faker library](https://faker.readthedocs.io/
 ```plaintext
 interactive-banking-dashboard/
 ├── app.py                 # Main application code
-├── synthetic_banking_data.csv  # Synthetic dataset
+├── banking_data.csv  # Synthetic dataset
 ├── requirements.txt       # Dependencies
 ├── README.md              # Project documentation
 └── .gitignore             # Ignored files for Git
@@ -107,18 +104,17 @@ interactive-banking-dashboard/
 
 ## License
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+This project is licensed under the [MIT LICENSE](https://opensource.org/license/mit).
 
 ---
 
 ## Author
 
-**[Your Name]**  
-Feel free to connect with me on [LinkedIn](https://www.linkedin.com) or check out my [portfolio](https://your-portfolio-link.com).
+**Joshua Parep**  
+Feel free to connect with me on [LinkedIn](https://www.linkedin.com) or check out my [portfolio](https://jparep.com).
 
 ---
 
 ## Acknowledgments
 
 - [Dash Documentation](https://dash.plotly.com/)
-- [Faker Library](https://faker.readthedocs.io/) for generating synthetic data.
