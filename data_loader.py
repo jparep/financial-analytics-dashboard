@@ -2,13 +2,14 @@ import pandas as pd
 
 # Load the dataset once at module level
 DATA_PATH = "./data/banking_data.csv"
-df = pd.read_csv(DATA_PATH, parse_dates=["Date"])  # Parse dates upfront
 
 def load_data():
     """
     Returns the entire dataset.
     """
+    df = pd.read_csv(DATA_PATH, parse_dates=["Date"])  # Parse dates upfront
     return df
+df = load_data
 
 def filter_data(region=None, account_type=None):
     """
@@ -42,7 +43,5 @@ def get_customer_segmentation(filtered_df):
     return filtered_df.groupby("Balance_Category").size().reset_index(name="Customer_Count")
 
 def filter_data_by_criteria(regions, account_types):
-    """
-    Filters the dataset based on multiple regions and account types.
-    """
+    df = pd.read_csv("./data/banking_data.csv")
     return df[(df["Region"].isin(regions)) & (df["Account_Type"].isin(account_types))]
