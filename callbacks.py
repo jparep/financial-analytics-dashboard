@@ -1,6 +1,6 @@
 from dash.dependencies import Input, Output
 from data_loader import filter_data, get_monthly_transaction_data, get_customer_segmentation
-from visualizations import create_balance_histogram, create_loan_status_pie, create_monthly_transaction_chart
+from visualizations import create_balance_histogram, create_loan_status_pie, create_monthly_transaction_chart, create_customer_segmentation_chart
 
 def register_callbacks(app):
     @app.callback(
