@@ -4,7 +4,7 @@ from callbacks import register_callbacks
 
 # Initialize the Dash app
 app = Dash(__name__)
-app.title = "Banking Data Dashboard"
+app.title = "Interactive Dashboard"
 
 # Expose the Flask server object
 server = app.server
