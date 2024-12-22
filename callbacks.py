@@ -17,18 +17,21 @@ def register_callbacks(app):
          Input("account_selector", "value")]
     )
     def update_graphs(selected_region, selected_account):
-        # Filter data based on user inputs
+        # 1. Filter data
         filtered_data = load_filtered_data(selected_region, selected_account)
+        if filtered_data.empty:
+            print("Filtered data is empty! Returning empty graphs.")
+            return {}, {}, {}, {}
 
-        # Create visualizations
+        # 2. Process data for additional visualizations
+        monthly_trend_data = get_monthly_transaction_trend(filtered_data)
+        customer_segmentation_data = get_customer_segmentation(filtered_data)
+
+        # 3. Generate visualizations
         balance_fig = create_balance_histogram(filtered_data)
         loan_fig = create_loan_status_pie(filtered_data)
-
-        # Additional visualizations
-        monthly_trend_data = get_monthly_transaction_trend(filtered_data)
         monthly_trend_fig = create_monthly_transaction_trend_line(monthly_trend_data)
-
-        customer_segmentation_data = get_customer_segmentation(filtered_data)
         customer_segmentation_fig = create_customer_segmentation_bar(customer_segmentation_data)
 
+        # 4. Return figures
         return balance_fig, loan_fig, monthly_trend_fig, customer_segmentation_fig

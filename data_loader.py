@@ -7,6 +7,8 @@ def load_filtered_data(region, account_type):
     # Load the dataset
     df = pd.read_csv("./data/banking_data.csv")
     # Filter data based on the selected region and account type
+    print(df.head())  # Add this in `data_loader.py`
+
     return df[(df["Region"] == region) & (df["Account_Type"] == account_type)]
 
 def get_monthly_transaction_trend(filtered_df):
