@@ -2,7 +2,6 @@ from dash import html, dcc
 import pandas as pd
 
 def create_layout():
-    # Load a sample of the dataset to populate dropdown options
     df = pd.read_csv("./data/banking_data.csv")
 
     return html.Div([
@@ -27,6 +26,6 @@ def create_layout():
 
         dcc.Graph(id="balance_distribution"),
         dcc.Graph(id="loan_status_chart"),
-        dcc.Graph(id="monthly_transaction_trend"),
-        dcc.Graph(id="customer_segmentation")  # New graph for customer segmentation
+        dcc.Graph(id="monthly_transactions_chart"),
+        dcc.Graph(id="customer_segmentation_chart")
     ])
