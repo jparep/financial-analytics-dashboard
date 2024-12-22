@@ -31,31 +31,17 @@ def get_monthly_transaction_trend(data):
     Returns:
     - pd.DataFrame: Monthly transaction trends with total transaction amounts.
     """
-
-    # Ensure the 'Date' column is in datetime format
-    if 'Date' in data.columns:
-        data['Date'] = pd.to_datetime(data['Date'], errors='coerce')
-    else:
-        raise KeyError("The input data does not contain a 'Date' column.")
-
-    # Drop rows with invalid dates
+    data['Date'] = pd.to_datetime(data['Date'], errors='coerce')
     data = data.dropna(subset=['Date'])
-
-    # Extract the month from the 'Date' column
     data['Month'] = data['Date'].dt.to_period('M')
 
-    # Check if 'Transaction_Amount' column exists and is numeric
     if 'Transaction_Amount' not in data.columns:
         raise KeyError("The input data does not contain a 'Transaction_Amount' column.")
     if not pd.api.types.is_numeric_dtype(data['Transaction_Amount']):
         raise TypeError("'Transaction_Amount' column must contain numeric values.")
 
-    # Group by month and calculate the total transaction amount
     monthly_trend = data.groupby('Month')['Transaction_Amount'].sum().reset_index()
-
-    # Convert 'Month' back to datetime for easier graphing
     monthly_trend['Month'] = monthly_trend['Month'].dt.to_timestamp()
-
     return monthly_trend
 
 
@@ -83,3 +69,20 @@ def filter_data(data, start_date=None, end_date=None):
         data = data[data['Date'] <= pd.to_datetime(end_date)]
     
     return data
+
+
+def load_filtered_data(file_path, start_date=None, end_date=None):
+    """
+    Loads and filters transaction data based on a date range.
+
+    Parameters:
+    - file_path (str): The path to the CSV file.
+    - start_date (str): The start date in 'YYYY-MM-DD' format (optional).
+    - end_date (str): The end date in 'YYYY-MM-DD' format (optional).
+
+    Returns:
+    - pd.DataFrame: The filtered transaction data.
+    """
+    data = load_data(file_path)
+    filtered_data = filter_data(data, start_date=start_date, end_date=end_date)
+    return filtered_data
