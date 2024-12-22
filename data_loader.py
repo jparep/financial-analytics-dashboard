@@ -1,39 +1,85 @@
 import pandas as pd
 
-def load_filtered_data(region, account_type):
+def load_data(file_path):
     """
-    Load and filter data based on the selected region and account type.
-    """
-    # Load the dataset
-    df = pd.read_csv("./data/banking_data.csv")
-    # Filter data based on the selected region and account type
-    print(df.head())  # Add this in `data_loader.py`
+    Loads transaction data from a specified CSV file.
 
-    return df[(df["Region"] == region) & (df["Account_Type"] == account_type)]
+    Parameters:
+    - file_path (str): The path to the CSV file.
 
-def get_monthly_transaction_trend(filtered_df):
+    Returns:
+    - pd.DataFrame: The loaded transaction data.
     """
-    Process data to compute monthly transaction trends.
+    try:
+        data = pd.read_csv(file_path)
+        return data
+    except FileNotFoundError:
+        raise FileNotFoundError(f"The file at {file_path} was not found.")
+    except pd.errors.ParserError:
+        raise ValueError("Error parsing the file. Please check the file format.")
+    except Exception as e:
+        raise RuntimeError(f"An unexpected error occurred: {e}")
+
+
+def get_monthly_transaction_trend(data):
     """
+    Groups transaction data by month and calculates the total transaction amount for each month.
+
+    Parameters:
+    - data (pd.DataFrame): The filtered transaction data. Must contain 'Date' and 'Transaction_Amount' columns.
+
+    Returns:
+    - pd.DataFrame: Monthly transaction trends with total transaction amounts.
+    """
+
     # Ensure the 'Date' column is in datetime format
-    filtered_df["Date"] = pd.to_datetime(filtered_df["Date"])
+    if 'Date' in data.columns:
+        data['Date'] = pd.to_datetime(data['Date'], errors='coerce')
+    else:
+        raise KeyError("The input data does not contain a 'Date' column.")
+
+    # Drop rows with invalid dates
+    data = data.dropna(subset=['Date'])
+
+    # Extract the month from the 'Date' column
+    data['Month'] = data['Date'].dt.to_period('M')
+
+    # Check if 'Transaction_Amount' column exists and is numeric
+    if 'Transaction_Amount' not in data.columns:
+        raise KeyError("The input data does not contain a 'Transaction_Amount' column.")
+    if not pd.api.types.is_numeric_dtype(data['Transaction_Amount']):
+        raise TypeError("'Transaction_Amount' column must contain numeric values.")
+
     # Group by month and calculate the total transaction amount
-    monthly_trend = (
-        filtered_df.groupby(filtered_df["Date"].dt.to_period("M"))
-        .sum()
-        .reset_index()
-    )
-    monthly_trend["Date"] = monthly_trend["Date"].dt.to_timestamp()
+    monthly_trend = data.groupby('Month')['Transaction_Amount'].sum().reset_index()
+
+    # Convert 'Month' back to datetime for easier graphing
+    monthly_trend['Month'] = monthly_trend['Month'].dt.to_timestamp()
+
     return monthly_trend
 
-def get_customer_segmentation(filtered_df):
+
+def filter_data(data, start_date=None, end_date=None):
     """
-    Process data to compute customer segmentation by region.
+    Filters the transaction data based on the specified date range.
+
+    Parameters:
+    - data (pd.DataFrame): The transaction data.
+    - start_date (str): The start date in 'YYYY-MM-DD' format (optional).
+    - end_date (str): The end date in 'YYYY-MM-DD' format (optional).
+
+    Returns:
+    - pd.DataFrame: The filtered transaction data.
     """
-    # Group by region and customer segment to get counts
-    segmentation = (
-        filtered_df.groupby(["Region", "Customer_Segment"])
-        .size()
-        .reset_index(name="Customer_Count")
-    )
-    return segmentation
+    if 'Date' not in data.columns:
+        raise KeyError("The input data does not contain a 'Date' column.")
+    
+    data['Date'] = pd.to_datetime(data['Date'], errors='coerce')
+    data = data.dropna(subset=['Date'])
+
+    if start_date:
+        data = data[data['Date'] >= pd.to_datetime(start_date)]
+    if end_date:
+        data = data[data['Date'] <= pd.to_datetime(end_date)]
+    
+    return data
