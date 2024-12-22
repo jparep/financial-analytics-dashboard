@@ -6,7 +6,10 @@ filter_style = {
     "border": "1px solid #ccc",
     "border-radius": "5px",
     "padding": "10px",
-    "margin-bottom": "20px"
+    "margin-bottom": "20px",
+    "display": "inline-block",  # Ensures the filters are displayed inline
+    "vertical-align": "top",    # Aligns the filters to the top
+    "margin-right": "10px"      # Adds space between the filters
 }
 chart_style = {"flex": "1", "padding": "10px"}
 
@@ -21,10 +24,7 @@ def create_layout():
         # Filters Section
         html.Div([
             html.Div([
-                html.Label(
-                    "Select Regions", 
-                    style={"font-weight": "bold", "margin-bottom": "5px", "display": "block"}
-                ),
+                html.Label("Select Regions", style={"font-weight": "bold", "margin-bottom": "5px", "display": "block"}),
                 dcc.Checklist(
                     id="region_selector",
                     options=[{"label": region, "value": region} for region in df["Region"].unique()],
@@ -34,10 +34,7 @@ def create_layout():
             ], style=filter_style),
 
             html.Div([
-                html.Label(
-                    "Select Account Types", 
-                    style={"font-weight": "bold", "margin-bottom": "5px", "display": "block"}
-                ),
+                html.Label("Select Account Types", style={"font-weight": "bold", "margin-bottom": "5px", "display": "block"}),
                 dcc.Checklist(
                     id="account_selector",
                     options=[{"label": acc, "value": acc} for acc in df["Account_Type"].unique()],
@@ -45,7 +42,7 @@ def create_layout():
                     style={"display": "block"}
                 )
             ], style=filter_style)
-        ], style={"width": "60%", "margin": "0 auto"}),
+        ], style={"text-align": "center"}),  # Centers the filter section
 
         # Charts Layout
         html.Div([
