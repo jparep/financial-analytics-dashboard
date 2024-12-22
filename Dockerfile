@@ -36,10 +36,9 @@ WORKDIR /app
 RUN addgroup --system appgroup && adduser --system --ingroup appgroup appuser
 USER appuser
 
-# Copy virtual environment and application files
-COPY --from=builder /app/venv /app/venv
-COPY . .
-RUN chown -R appuser:appgroup /app
+# Copy virtual environment and application files with correct ownership
+COPY --chown=appuser:appgroup --from=builder /app/venv /app/venv
+COPY --chown=appuser:appgroup . .
 
 # Expose the Dash app port (default: 8050)
 EXPOSE 8050
