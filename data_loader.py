@@ -1,36 +1,44 @@
 import pandas as pd
 
-# Load the DataFrame once at the module level
+# Load the dataset once
 DATA_PATH = "./data/banking_data.csv"
-df = pd.read_csv(DATA_PATH, parse_dates=["Date"])  # Parse "Date" upfront for efficiency
+df = pd.read_csv(DATA_PATH, parse_dates=["Date"])  # Parse dates upfront
 
-def load_filtered_data(region, account_type):
+def filter_data(region=None, account_type=None):
     """
-    Filters the preloaded DataFrame based on region and account type.
+    Filters the dataset based on the provided criteria (region and account type).
+    If no filters are provided, returns the full dataset.
     """
-    return df[(df["Region"] == region) & (df["Account_Type"] == account_type)]
+    filtered_df = df.copy()
 
-def get_monthly_transaction_data():
+    if region:
+        filtered_df = filtered_df[filtered_df["Region"] == region]
+    if account_type:
+        filtered_df = filtered_df[filtered_df["Account_Type"] == account_type]
+
+    return filtered_df
+
+def get_monthly_transaction_data(filtered_df):
     """
-    Groups transactions by month and calculates the total transaction amount.
+    Groups filtered data by month and calculates the total transaction amount.
     """
-    df["Month"] = df["Date"].dt.to_period("M").dt.to_timestamp()
-    monthly_data = df.groupby("Month")["Transaction_Amount"].sum().reset_index()
+    filtered_df["Month"] = filtered_df["Date"].dt.to_period("M").dt.to_timestamp()
+    monthly_data = filtered_df.groupby("Month")["Transaction_Amount"].sum().reset_index()
     return monthly_data
 
-def get_customer_segmentation():
+def get_customer_segmentation(filtered_df):
     """
-    Segments customers into categories based on their balance.
+    Segments filtered data into categories based on balances.
     """
     # Define balance categories
     conditions = [
-        (df["Balance"] < 10000),
-        (df["Balance"] >= 10000) & (df["Balance"] < 50000),
-        (df["Balance"] >= 50000)
+        (filtered_df["Balance"] < 10000),
+        (filtered_df["Balance"] >= 10000) & (filtered_df["Balance"] < 50000),
+        (filtered_df["Balance"] >= 50000)
     ]
     categories = ["Low", "Medium", "High"]
-    df["Balance_Category"] = pd.cut(
-        df["Balance"], bins=[-1, 9999, 49999, float("inf")], labels=categories
+    filtered_df["Balance_Category"] = pd.cut(
+        filtered_df["Balance"], bins=[-1, 9999, 49999, float("inf")], labels=categories
     )
-    segmentation = df.groupby("Balance_Category").size().reset_index(name="Customer_Count")
+    segmentation = filtered_df.groupby("Balance_Category").size().reset_index(name="Customer_Count")
     return segmentation
