@@ -5,27 +5,33 @@ def create_layout():
     df = pd.read_csv("./data/banking_data.csv")
 
     return html.Div([
+        # Dashboard Title
         html.H1("Banking Data Dashboard", style={"text-align": "center"}),
 
-        # Dropdown filters
+        # Filters with Checkboxes
         html.Div([
-            dcc.Dropdown(
-                id="region_selector",
-                options=[{"label": region, "value": region} for region in df["Region"].unique()],
-                value=df["Region"].unique()[0],
-                multi=False,
-                style={"width": "45%", "display": "inline-block", "margin-right": "10px"}
-            ),
-            dcc.Dropdown(
-                id="account_selector",
-                options=[{"label": acc, "value": acc} for acc in df["Account_Type"].unique()],
-                value=df["Account_Type"].unique()[0],
-                multi=False,
-                style={"width": "45%", "display": "inline-block"}
-            )
-        ], style={"text-align": "center", "margin-bottom": "20px"}),
+            html.Div([
+                html.Label("Select Regions", style={"font-weight": "bold", "margin-bottom": "5px"}),
+                dcc.Checklist(
+                    id="region_selector",
+                    options=[{"label": region, "value": region} for region in df["Region"].unique()],
+                    value=[df["Region"].unique()[0]],  # Default selection
+                    inline=True
+                )
+            ], style={"border": "1px solid #ccc", "border-radius": "5px", "padding": "10px", "margin-bottom": "10px"}),
 
-        # Chart container with Flexbox
+            html.Div([
+                html.Label("Select Account Types", style={"font-weight": "bold", "margin-bottom": "5px"}),
+                dcc.Checklist(
+                    id="account_selector",
+                    options=[{"label": acc, "value": acc} for acc in df["Account_Type"].unique()],
+                    value=[df["Account_Type"].unique()[0]],  # Default selection
+                    inline=True
+                )
+            ], style={"border": "1px solid #ccc", "border-radius": "5px", "padding": "10px", "margin-bottom": "20px"})
+        ], style={"width": "60%", "margin": "0 auto"}),
+
+        # Charts Layout
         html.Div([
             html.Div([
                 dcc.Graph(id="balance_distribution")
