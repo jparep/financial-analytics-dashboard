@@ -42,3 +42,7 @@ def get_customer_segmentation(filtered_df):
     )
     segmentation = filtered_df.groupby("Balance_Category").size().reset_index(name="Customer_Count")
     return segmentation
+
+def filter_data_by_criteria(regions, account_types):
+    df = pd.read_csv("./data/banking_data.csv")
+    return df[(df["Region"].isin(regions)) & (df["Account_Type"].isin(account_types))]
