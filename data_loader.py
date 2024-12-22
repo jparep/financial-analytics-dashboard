@@ -86,3 +86,25 @@ def load_filtered_data(file_path, start_date=None, end_date=None):
     data = load_data(file_path)
     filtered_data = filter_data(data, start_date=start_date, end_date=end_date)
     return filtered_data
+
+
+def get_customer_segmentation(data):
+    """
+    Performs customer segmentation based on transaction data.
+
+    Parameters:
+    - data (pd.DataFrame): The transaction data. Must contain 'Customer_ID' and 'Transaction_Amount' columns.
+
+    Returns:
+    - pd.DataFrame: Customer segmentation data with categories like 'High Value', 'Medium Value', and 'Low Value'.
+    """
+    if 'Customer_ID' not in data.columns or 'Transaction_Amount' not in data.columns:
+        raise KeyError("The input data must contain 'Customer_ID' and 'Transaction_Amount' columns.")
+    
+    customer_totals = data.groupby('Customer_ID')['Transaction_Amount'].sum().reset_index()
+    customer_totals['Segment'] = pd.qcut(
+        customer_totals['Transaction_Amount'],
+        q=3,
+        labels=['Low Value', 'Medium Value', 'High Value']
+    )
+    return customer_totals
