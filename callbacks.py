@@ -10,11 +10,14 @@ def register_callbacks(app):
          Input("account_selector", "value")]
     )
     def update_graphs(selected_region, selected_account):
-        # Filter data based on user inputs
-        filtered_data = load_filtered_data(selected_region, selected_account)
+        try:
+            # Filter data based on user inputs
+            filtered_data = load_filtered_data(selected_region, selected_account)
 
-        # Create visualizations
-        balance_fig = create_balance_histogram(filtered_data)
-        loan_fig = create_loan_status_pie(filtered_data)
+            # Create visualizations
+            balance_fig = create_balance_histogram(filtered_data)
+            loan_fig = create_loan_status_pie(filtered_data)
 
-        return balance_fig, loan_fig
+            return balance_fig, loan_fig
+        except Exception as e:
+            raise RuntimeError(f"Error in callbacks: {e}")
