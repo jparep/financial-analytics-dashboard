@@ -27,5 +27,6 @@ def create_layout():
 
         dcc.Graph(id="balance_distribution"),
         dcc.Graph(id="loan_status_chart"),
-        dcc.Graph(id="monthly_transaction_trend")  # New graph for monthly trends
+        dcc.Graph(id="monthly_transaction_trend"),
+        dcc.Graph(id="customer_segmentation")  # New graph for customer segmentation
     ])
