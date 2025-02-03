@@ -2,62 +2,71 @@ from dash import html, dcc
 from data_loader import get_data
 
 # Shared styles
-filter_style = {
+FILTER_STYLE = {
     "border": "1px solid #ccc",
     "border-radius": "5px",
     "padding": "10px",
     "margin-bottom": "20px",
-    "display": "inline-block",  # Ensures the filters are displayed inline
-    "vertical-align": "top",    # Aligns the filters to the top
-    "margin-right": "10px"      # Adds space between the filters
+    "display": "inline-block",
+    "vertical-align": "top",
+    "margin-right": "10px"
 }
-chart_style = {"flex": "1", "padding": "10px"}
+CHART_STYLE = {"flex": "1", "padding": "10px"}
+CONTAINER_STYLE = {"display": "flex", "flex-wrap": "wrap"}  # Responsive layout for charts
+
+
+def generate_options(values):
+    """
+    Generates Dash checklist options from a unique list of values.
+    """
+    return [{"label": val, "value": val} for val in sorted(values)]
+
 
 def create_layout():
-    # Load data for dropdown and checkbox options
-    df = get_data()
+    """
+    Creates the layout for the Dash banking dashboard.
+    """
+    df = get_data()  # Load data once
+
+    # Extract unique values
+    regions = df["Region"].dropna().unique()
+    account_types = df["Account_Type"].dropna().unique()
 
     return html.Div([
-        # Dashboard Title
         html.H1("Banking Data Dashboard", style={"text-align": "center"}),
 
         # Filters Section
         html.Div([
             html.Div([
-                html.Label(
-                    "Select Regions", 
-                    style={"font-weight": "bold", "margin-bottom": "5px", "display": "block"}
-                ),
+                html.Label("Select Regions", className="filter-label"),
                 dcc.Checklist(
                     id="region_selector",
-                    options=[{"label": region, "value": region} for region in df["Region"].unique()],
-                    value=list(df["Region"].unique()),  # Default: Select all
-                    labelStyle={"display": "inline-block", "margin-right": "10px"}  # Aligns checkboxes horizontally
+                    options=generate_options(regions),
+                    value=list(regions),  # Default: Select all
+                    labelStyle={"display": "inline-block", "margin-right": "10px"}
                 )
-            ], style=filter_style),
+            ], style=FILTER_STYLE),
 
             html.Div([
-                html.Label(
-                    "Select Account Types", 
-                    style={"font-weight": "bold", "margin-bottom": "5px", "display": "block"}
-                ),
+                html.Label("Select Account Types", className="filter-label"),
                 dcc.Checklist(
                     id="account_selector",
-                    options=[{"label": acc, "value": acc} for acc in df["Account_Type"].unique()],
-                    value=list(df["Account_Type"].unique()),  # Default: Select all
-                    labelStyle={"display": "inline-block", "margin-right": "10px"}  # Aligns checkboxes horizontally
+                    options=generate_options(account_types),
+                    value=list(account_types),  # Default: Select all
+                    labelStyle={"display": "inline-block", "margin-right": "10px"}
                 )
-            ], style=filter_style)
-        ], style={"text-align": "center"}),  # Centers the filter section
+            ], style=FILTER_STYLE)
+        ], style={"text-align": "center"}),
 
         # Charts Layout
         html.Div([
-            html.Div([dcc.Graph(id="balance_distribution")], style=chart_style),
-            html.Div([dcc.Graph(id="loan_status_chart")], style=chart_style),
-        ], style={"display": "flex", "flex-wrap": "wrap"}),  # Top row of charts
+            html.Div([dcc.Graph(id="balance_distribution")], style=CHART_STYLE),
+            html.Div([dcc.Graph(id="loan_status_chart")], style=CHART_STYLE),
+        ], style=CONTAINER_STYLE),
 
         html.Div([
-            html.Div([dcc.Graph(id="monthly_transactions_chart")], style=chart_style),
-            html.Div([dcc.Graph(id="customer_segmentation_chart")], style=chart_style),
-        ], style={"display": "flex", "flex-wrap": "wrap"})  # Bottom row of charts
+            html.Div([dcc.Graph(id="monthly_transactions_chart")], style=CHART_STYLE),
+            html.Div([dcc.Graph(id="customer_segmentation_chart")], style=CHART_STYLE),
+        ], style=CONTAINER_STYLE)
+
     ], style={"padding": "20px"})
