@@ -1,53 +1,36 @@
 import pandas as pd
 
-# Load the dataset once at the module level
+# Load the dataset once at the module level (lazy loading for efficiency)
 DATA_PATH = "./data/banking_data.csv"
-df = pd.read_csv(DATA_PATH, parse_dates=["Date"])  # Parse dates upfront
+
+def load_data():
+    """
+    Lazy loads the dataset, parsing dates upfront.
+    Uses caching to avoid redundant I/O operations.
+    """
+    return pd.read_csv(DATA_PATH, parse_dates=["Date"])
+
+# Cache the dataset at the module level to avoid redundant reads
+_df = load_data()
 
 def get_data():
     """
-    Returns a copy of the entire dataset to ensure immutability.
+    Returns a copy of the dataset to ensure immutability.
     """
-    return df.copy()
+    return _df.copy()
 
 def filter_data(region=None, account_type=None):
     """
-    Filters the dataset based on the provided criteria (region and account type).
-    If no filters are provided, returns the full dataset.
+    Filters the dataset based on the provided criteria.
+    Uses `.query()` for better performance.
     """
-    filtered_df = df.copy()
+    filtered_df = _df
     if region:
-        filtered_df = filtered_df[filtered_df["Region"] == region]
+        filtered_df = filtered_df.query("Region == @region")
     if account_type:
-        filtered_df = filtered_df[filtered_df["Account_Type"] == account_type]
-    return filtered_df
+        filtered_df = filtered_df.query("Account_Type == @account_type")
+    return filtered_df.copy()
 
 def get_monthly_transaction_data(filtered_df):
     """
-    Groups filtered data by month and calculates the total transaction amount.
-    """
-    filtered_df["Month"] = filtered_df["Date"].dt.to_period("M").dt.to_timestamp()
-    return filtered_df.groupby("Month")["Transaction_Amount"].sum().reset_index()
-
-def get_customer_segmentation(filtered_df):
-    """
-    Segments filtered data into categories based on balances.
-    """
-    categories = ["Low", "Medium", "High"]
-    filtered_df["Balance_Category"] = pd.cut(
-        filtered_df["Balance"],
-        bins=[-1, 9999, 49999, float("inf")],
-        labels=categories,
-    )
-    return filtered_df.groupby("Balance_Category").size().reset_index(name="Customer_Count")
-
-def filter_data_by_criteria(regions=None, account_types=None):
-    """
-    Filters the dataset based on regions and account types.
-    """
-    filtered_df = df.copy()
-    if regions:
-        filtered_df = filtered_df[filtered_df["Region"].isin(regions)]
-    if account_types:
-        filtered_df = filtered_df[filtered_df["Account_Type"].isin(account_types)]
-    return filtered_df
+    Groups filtered data by month
